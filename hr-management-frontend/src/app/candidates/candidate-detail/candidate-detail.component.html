@@ -1,0 +1,26 @@
+<!-- src/app/candidates/candidate-detail/candidate-detail.component.html -->
+<div *ngIf="candidate">
+    <h2>{{ candidate.name | uppercase }} Details</h2>
+    <div><span>id: </span>{{ candidate.id }}</div>
+    <div>
+      <label>
+        Name:
+        <input [(ngModel)]="candidate.name" placeholder="name"/>
+      </label>
+    </div>
+    <div>
+      <label>
+        Email:
+        <input [(ngModel)]="candidate.email" placeholder="email"/>
+      </label>
+    </div>
+    <div>
+      <label>
+        Phone:
+        <input [(ngModel)]="candidate.phone" placeholder="phone"/>
+      </label>
+    </div>
+    <button mat-button (click)="goBack()">Go Back</button>
+    <button mat-button (click)="save()">Save</button>
+  </div>
+  

@@ -1,0 +1,15 @@
+<div class="container">
+    <h1>Candidates</h1>
+    <form (ngSubmit)="addCandidate(name.value, email.value, phone.value)" #candidateForm="ngForm">
+      <mat-form-field>
+        <input matInput placeholder="Name" #name required>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Email" #email required>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Phone" #phone>
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit">Add Candidate</button>
+    </form>
+</div>
