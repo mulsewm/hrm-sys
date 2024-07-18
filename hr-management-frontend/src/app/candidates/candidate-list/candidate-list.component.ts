@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { CandidateService } from '../candidate.service';
 import { Candidate } from '../candidate.model';
+import { EditCandidateDialogComponent } from '../edit-candidate-dialog/edit-candidate-dialog.component';
 
 @Component({
   selector: 'app-candidate-list',
@@ -10,7 +12,7 @@ import { Candidate } from '../candidate.model';
 export class CandidatesComponent implements OnInit {
   candidates: Candidate[] = [];
 
-  constructor(private candidateService: CandidateService) { }
+  constructor(private candidateService: CandidateService, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.getCandidates();
@@ -21,22 +23,30 @@ export class CandidatesComponent implements OnInit {
   }
 
   addCandidate(name: string, email: string, phone: string): void {
-    console.log('Add Candidate called'); // Add this line for debugging
     if (!name || !email) { return; }
     const newCandidate: Candidate = { name, email, phone } as Candidate;
     this.candidateService.addCandidate(newCandidate)
       .subscribe(candidate => {
-        console.log('Candidate added:', candidate); // Add this line for debugging
         this.candidates.push(candidate);
-        this.getCandidates(); // Fetch updated list after adding
-      }, error => {
-        console.error('Error adding candidate:', error); // Add this line for debugging
+        this.getCandidates(); 
       });
   }
 
   updateCandidate(candidate: Candidate): void {
-    this.candidateService.updateCandidate(candidate.id, candidate)
-      .subscribe();
+    const dialogRef = this.dialog.open(EditCandidateDialogComponent, {
+      width: '250px',
+      data: { ...candidate }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const updatedCandidate: Candidate = { ...candidate, ...result };
+        this.candidateService.updateCandidate(updatedCandidate.id, updatedCandidate)
+          .subscribe(() => {
+            this.getCandidates(); 
+          });
+      }
+    });
   }
 
   deleteCandidate(candidate: Candidate): void {
