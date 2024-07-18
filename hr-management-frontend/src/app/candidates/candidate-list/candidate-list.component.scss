@@ -1,15 +1,24 @@
-/* src/app/candidates/candidate-list/candidate-list.component.scss */
 .container {
-    margin: 20px;
-  }
-  
-  mat-form-field {
-    display: block;
-    margin-bottom: 10px;
-  }
-  
-  table {
-    width: 100%;
-    margin-top: 20px;
-  }
-  
+  margin: 20px;
+}
+
+.candidate-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 400px;
+  margin-bottom: 40px;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.candidate-table {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.mat-header-cell, .mat-cell {
+  padding: 16px;
+}

@@ -1,48 +1,85 @@
 <div class="container">
-  <h1>Candidates</h1>
-  <form (ngSubmit)="addCandidate(name.value, email.value, phone.value)" #candidateForm="ngForm">
-    <mat-form-field>
-      <input matInput placeholder="Name" #name required>
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput placeholder="Email" #email required>
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput placeholder="Phone" #phone>
-    </mat-form-field>
+  <h2>Candidates</h2>
+  <form (ngSubmit)="addCandidate(name.value, email.value, phone.value)" #candidateForm="ngForm" class="candidate-form">
+    <p>
+      <mat-form-field appearance="fill">
+        <mat-label>Name</mat-label>
+        <input matInput placeholder="Enter candidate name" #name ngModel="Abebe Berhanu" required name="name">
+        <mat-icon matPrefix>person</mat-icon>
+        <mat-hint>Enter the candidate's name</mat-hint>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput placeholder="Enter email"  #email  required email="email">
+        <mat-icon matPrefix>email</mat-icon>
+        <mat-hint>Enter a valid email</mat-hint>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field appearance="fill">
+        <mat-label>Phone</mat-label>
+        <input matInput placeholder="Enter candidate number"   #phone >
+        <mat-icon matPrefix>phone</mat-icon>
+        <mat-hint>Enter the phone</mat-hint>
+      </mat-form-field>
+    </p>
     <button mat-raised-button color="primary" type="submit">Add Candidate</button>
   </form>
 
-  <table mat-table [dataSource]="candidates" class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+    <!-- ID Column -->
     <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef> ID </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by ID">
+        ID
+      </th>
       <td mat-cell *matCellDef="let candidate"> {{candidate.id}} </td>
     </ng-container>
 
+    <!-- Name Column -->
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">
+        Name
+      </th>
       <td mat-cell *matCellDef="let candidate"> {{candidate.name}} </td>
     </ng-container>
 
+    <!-- Email Column -->
     <ng-container matColumnDef="email">
-      <th mat-header-cell *matHeaderCellDef> Email </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by email">
+        Email
+      </th>
       <td mat-cell *matCellDef="let candidate"> {{candidate.email}} </td>
     </ng-container>
 
+    <!-- Phone Column -->
     <ng-container matColumnDef="phone">
-      <th mat-header-cell *matHeaderCellDef> Phone </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by phone">
+        Phone
+      </th>
       <td mat-cell *matCellDef="let candidate"> {{candidate.phone}} </td>
     </ng-container>
 
+    <!-- Actions Column -->
     <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef> Actions </th>
+      <th mat-header-cell *matHeaderCellDef>
+        Actions
+      </th>
       <td mat-cell *matCellDef="let candidate">
         <button mat-button (click)="updateCandidate(candidate)">Edit</button>
         <button mat-button (click)="deleteCandidate(candidate)">Delete</button>
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="['id', 'name', 'email', 'phone', 'actions']"></tr>
-    <tr mat-row *matRowDef="let row; columns: ['id', 'name', 'email', 'phone', 'actions'];"></tr>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    
+
   </table>
+  <mat-paginator [length]="dataSource.data.length"
+                   [pageSize]="10"
+                   [pageSizeOptions]="[5, 10, 25, 100]">
+    </mat-paginator>
 </div>
