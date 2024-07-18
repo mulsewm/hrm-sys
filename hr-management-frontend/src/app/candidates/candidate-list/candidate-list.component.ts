@@ -3,6 +3,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { CandidateService } from '../candidate.service';
 import { Candidate } from '../candidate.model';
 import { EditCandidateDialogComponent } from '../edit-candidate-dialog/edit-candidate-dialog.component';
+import { DeleteConfirmationDialogComponent } from '../delete-confirmation-dialog/delete-confirmation-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-candidate-list',
@@ -12,7 +14,12 @@ import { EditCandidateDialogComponent } from '../edit-candidate-dialog/edit-cand
 export class CandidatesComponent implements OnInit {
   candidates: Candidate[] = [];
 
-  constructor(private candidateService: CandidateService, public dialog: MatDialog) { }
+  constructor(
+    private candidateService: CandidateService, 
+    public dialog: MatDialog,
+    private snackBar: MatSnackBar 
+
+  ) { }
 
   ngOnInit(): void {
     this.getCandidates();
@@ -28,7 +35,10 @@ export class CandidatesComponent implements OnInit {
     this.candidateService.addCandidate(newCandidate)
       .subscribe(candidate => {
         this.candidates.push(candidate);
-        this.getCandidates(); 
+        this.getCandidates(); // Fetch updated list after adding]
+        this.snackBar.open('New Candidate is Added', 'Close', {
+          duration: 3000, 
+        });
       });
   }
 
@@ -43,18 +53,30 @@ export class CandidatesComponent implements OnInit {
         const updatedCandidate: Candidate = { ...candidate, ...result };
         this.candidateService.updateCandidate(updatedCandidate.id, updatedCandidate)
           .subscribe(() => {
-            this.getCandidates(); 
+            this.getCandidates(); // Fetch updated list after editing
+            this.snackBar.open('Data is Updated', 'Close', {
+              duration: 3000, 
+            });
           });
       }
     });
   }
 
   deleteCandidate(candidate: Candidate): void {
-    if (confirm('Are you sure you want to delete this candidate?')) {
-      this.candidateService.deleteCandidate(candidate.id)
-        .subscribe(() => {
-          this.candidates = this.candidates.filter(c => c !== candidate);
-        });
-    }
+    const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
+      width: '250px',
+      enterAnimationDuration: '300ms', // Animation duration
+      exitAnimationDuration: '300ms',
+      data: candidate
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.candidateService.deleteCandidate(candidate.id)
+          .subscribe(() => {
+            this.candidates = this.candidates.filter(c => c !== candidate);
+          });
+      }
+    });
   }
 }
