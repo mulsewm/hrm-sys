@@ -10,8 +10,9 @@ import { AppComponent } from './app.component';
 import { CandidatesComponent } from './candidates/candidate-list/candidate-list.component';
 import { CandidateDetailComponent } from './candidates/candidate-detail/candidate-detail.component';
 import { CandidateService } from './candidates/candidate.service';
-import { MaterialModule } from './material.module';
 import { CompanyListComponent } from './companies/company-list/company-list.component';
+import { CompanyService } from './companies/company.service';
+import { MaterialModule } from './material.module';
 import { EditCandidateDialogComponent } from './candidates/edit-candidate-dialog/edit-candidate-dialog.component';
 
 @NgModule({
@@ -20,7 +21,6 @@ import { EditCandidateDialogComponent } from './candidates/edit-candidate-dialog
     CandidatesComponent,
     CandidateDetailComponent,
     CompanyListComponent,
-    
     EditCandidateDialogComponent
   ],
   imports: [
@@ -33,7 +33,7 @@ import { EditCandidateDialogComponent } from './candidates/edit-candidate-dialog
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [CandidateService],
+  providers: [CandidateService, CompanyService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

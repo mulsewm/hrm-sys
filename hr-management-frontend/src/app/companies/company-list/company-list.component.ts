@@ -1,7 +1,9 @@
-// src/app/companies/company-list/company-list.component.ts
-import { Component, OnInit } from '@angular/core';
-import { CompanyService } from '../company.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
 import { Company } from '../company.model';
+import { CompanyService } from '../company.service';
 
 @Component({
   selector: 'app-company-list',
@@ -9,30 +11,68 @@ import { Company } from '../company.model';
   styleUrls: ['./company-list.component.scss']
 })
 export class CompanyListComponent implements OnInit {
-  companies: Company[] = [];
+  displayedColumns: string[] = ['id', 'name', 'address', 'email', 'phone', 'actions'];
+  dataSource: MatTableDataSource<Company> = new MatTableDataSource();
+
+  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
 
   constructor(private companyService: CompanyService) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.getCompanies();
   }
 
-  getCompanies(): void {
-    this.companyService.getCompanies().subscribe(companies => this.companies = companies);
+  getCompanies() {
+    this.companyService.getCompanies().subscribe(
+      (data: Company[]) => {
+        this.dataSource = new MatTableDataSource(data);
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+      },
+      error => {
+        console.error('Error fetching companies:', error);
+      }
+    );
   }
 
-  addCompany(name: string, location: string): void {
-    this.companyService.addCompany({ name, location } as Company)
-      .subscribe(company => this.companies.push(company));
+  addCompany(name: string, address: string, email: string, phone: string) {
+    const newCompany: Company = { name, address, email, phone };
+    this.companyService.addCompany(newCompany).subscribe(
+      (data: Company) => {
+        this.getCompanies();
+      },
+      error => {
+        console.error('Error adding company:', error);
+      }
+    );
   }
 
-  updateCompany(company: Company): void {
-    this.companyService.updateCompany(company.id, company)
-      .subscribe();
+
+  updateCompany(company: Company) {
+    if (company.id) {
+      this.companyService.updateCompany(company.id, company).subscribe(
+        (data: Company) => {
+          this.getCompanies();
+        },
+        error => {
+          console.error('Error updating company:', error);
+        }
+      );
+    }
   }
 
-  deleteCompany(company: Company): void {
-    this.companyService.deleteCompany(company.id)
-      .subscribe(() => this.companies = this.companies.filter(c => c !== company));
+  deleteCompany(company: Company) {
+    if (company.id) {
+      this.companyService.deleteCompany(company.id).subscribe(
+        () => {
+          this.getCompanies();
+        },
+        error => {
+          console.error('Error deleting company:', error);
+        }
+      );
+    }
   }
 }

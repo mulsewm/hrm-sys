@@ -1,14 +1,14 @@
-// src/app/companies/company.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Company } from './company.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CompanyService {
-  private apiUrl = 'http://localhost:3000/api/companies';
+  private apiUrl = `${environment.apiUrl}/companies`;
 
   constructor(private http: HttpClient) { }
 

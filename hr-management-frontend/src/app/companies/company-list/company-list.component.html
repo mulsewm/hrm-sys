@@ -1,42 +1,83 @@
-<!-- src/app/companies/company-list/company-list.component.html -->
 <div class="container">
-    <h1>Companies</h1>
-    <form (ngSubmit)="addCompany(name.value, location.value)" #companyForm="ngForm">
-      <mat-form-field>
-        <input matInput placeholder="Name" #name required>
+  <h2>Companies</h2>
+  <form (ngSubmit)="addCompany(name.value, address.value, email.value, phone.value)" #companyForm="ngForm" class="company-form">
+    <p>
+      <mat-form-field appearance="fill">
+        <mat-label>Name</mat-label>
+        <input matInput placeholder="Enter company name" #name required>
+        <mat-icon matPrefix>business</mat-icon>
+        <mat-hint>Enter the company's name</mat-hint>
       </mat-form-field>
-      <mat-form-field>
-        <input matInput placeholder="Location" #location>
+    </p>
+    <p>
+      <mat-form-field appearance="fill">
+        <mat-label>Address</mat-label>
+        <input matInput placeholder="Enter address" #address required>
+        <mat-icon matPrefix>location_on</mat-icon>
+        <mat-hint>Enter the address</mat-hint>
       </mat-form-field>
-      <button mat-raised-button color="primary" type="submit">Add Company</button>
-    </form>
-  
-    <table mat-table [dataSource]="companies" class="mat-elevation-z8">
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef> ID </th>
-        <td mat-cell *matCellDef="let company"> {{company.id}} </td>
-      </ng-container>
-  
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef> Name </th>
-        <td mat-cell *matCellDef="let company"> {{company.name}} </td>
-      </ng-container>
-  
-      <ng-container matColumnDef="location">
-        <th mat-header-cell *matHeaderCellDef> Location </th>
-        <td mat-cell *matCellDef="let company"> {{company.location}} </td>
-      </ng-container>
-  
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef> Actions </th>
-        <td mat-cell *matCellDef="let company">
-          <button mat-button (click)="updateCompany(company)">Edit</button>
-          <button mat-button (click)="deleteCompany(company)">Delete</button>
-        </td>
-      </ng-container>
-  
-      <tr mat-header-row *matHeaderRowDef="['id', 'name', 'location', 'actions']"></tr>
-      <tr mat-row *matRowDef="let row; columns: ['id', 'name', 'location', 'actions'];"></tr>
-    </table>
-  </div>
-  
+    </p>
+    <p>
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput placeholder="Enter email" #email required>
+        <mat-icon matPrefix>email</mat-icon>
+        <mat-hint>Enter a valid email</mat-hint>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field appearance="fill">
+        <mat-label>Phone</mat-label>
+        <input matInput placeholder="Enter company phone number" #phone required>
+        <mat-icon matPrefix>phone</mat-icon>
+        <mat-hint>Enter the phone</mat-hint>
+      </mat-form-field>
+    </p>
+    <button mat-raised-button color="primary" type="submit">Add Company</button>
+  </form>
+
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by ID"> ID </th>
+      <td mat-cell *matCellDef="let company"> {{company.id}} </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name"> Name </th>
+      <td mat-cell *matCellDef="let company"> {{company.name}} </td>
+    </ng-container>
+
+    <!-- Address Column -->
+    <ng-container matColumnDef="address">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by address"> Address </th>
+      <td mat-cell *matCellDef="let company"> {{company.address}} </td>
+    </ng-container>
+
+    <!-- Email Column -->
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by email"> Email </th>
+      <td mat-cell *matCellDef="let company"> {{company.email}} </td>
+    </ng-container>
+
+    <!-- Phone Column -->
+    <ng-container matColumnDef="phone">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by phone"> Phone </th>
+      <td mat-cell *matCellDef="let company"> {{company.phone}} </td>
+    </ng-container>
+
+    <!-- Actions Column -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Actions </th>
+      <td mat-cell *matCellDef="let company">
+        <button mat-button (click)="updateCompany(company)">Edit</button>
+        <button mat-button (click)="deleteCompany(company)">Delete</button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  <mat-paginator [length]="dataSource?.data?.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</div>
